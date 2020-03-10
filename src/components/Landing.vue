@@ -68,9 +68,11 @@
         <div></div>
 
         <v-btn color="grey" outlined large>
-          <span class="grey--text text--darken-1 font-weight-bold">
-            Start
-          </span>
+          <router-link to="/recipies">
+            <span class="grey--text text--darken-1 font-weight-bold">
+              Start
+            </span>
+          </router-link>
         </v-btn>
       </v-container>
 
@@ -81,8 +83,6 @@
 
 <script>
 export default {
-  name: "Landing",
-
-  data: () => ({})
+  name: "Landing"
 };
 </script>

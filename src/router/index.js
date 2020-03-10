@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import Recipes from "../views/Recipes.vue";
 import RecipeView from "../views/RecipeView.vue";
 
 Vue.use(VueRouter);
@@ -12,7 +13,12 @@ const routes = [
     component: Home
   },
   {
-    path: "/recipes/recipeview",
+    path: "/recipes",
+    name: "Recipes",
+    component: Recipes
+  },
+  {
+    path: "/recipes/:recipe_id",
     name: "RecipeView",
     component: RecipeView
   }

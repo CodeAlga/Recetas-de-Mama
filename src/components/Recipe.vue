@@ -59,13 +59,15 @@
                 <v-list-item-title class="font-weight-medium ingridientTitle"
                   >Hashtags</v-list-item-title
                 >
-                <v-list-item-subtitle
-                  class="font-weight-light pl-1 d-flex flex-row flex-wrap"
-                  v-for="(tag, i) in recipe.tags"
-                  v-bind:key="i"
-                >
-                  {{ tag }}
-                </v-list-item-subtitle>
+                <v-chip-group column active-class="primary--text">
+                  <v-chip
+                    v-for="(tag, i) in recipe.tags"
+                    v-bind:key="i"
+                    class="font-weight-light pl-1 d-flex flex-row flex-wrap"
+                  >
+                    {{ tag }}
+                  </v-chip>
+                </v-chip-group>
               </v-list-item-content>
             </v-list-item>
           </div>
@@ -138,82 +140,10 @@
 <script>
 export default {
   name: "Recipe",
-  data() {
-    return {
-      recipe: {
-        name: "Patatas Brabas",
-        servings: "4",
-        time: "2 horas",
-        dificulty: "facil",
-        description:
-          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quia placeat accusantium dicta id maiores reiciendis tempora, nulla mollitia omnis facere veritatis velit odit officiis iure amet consectetur adipisicing elit. Quia placeat accusantium dicta id maiores reiciendis tempora, nulla mollitia omnis facere veritatisAt. Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
-        ingridients: [
-          {
-            ingridient: "patatas",
-            quantity: "4"
-          },
-          {
-            ingridient: "tomates triturados",
-            quantity: "1kg"
-          },
-          {
-            ingridient: "sal",
-            quantity: null
-          },
-          {
-            ingridient: "azucar",
-            quantity: "una cucharadita"
-          },
-          {
-            ingridient: "pimenton dulce",
-            quantity: "una cucharadita"
-          },
-          {
-            ingridient: "mucho mucho pimenton picante",
-            quantity: "una cucharadita"
-          }
-        ],
-        prep: [
-          {
-            title: "Step A",
-            step:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae nihil quae, vero voluptatem officia voluptas quasi perspiciatis, nostrum corporis ea molestias at ipsum accusantium tempore. Nihil ratione commodi accusamus!"
-          },
-          {
-            title: "Step B",
-            step:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae nihil quae, vero voluptatem officia voluptas quasi perspiciatis, nostrum corporis ea molestias at ipsum accusantium tempore. Nihil ratione commodi accusamus!"
-          },
-          {
-            title: "Step C",
-            step:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae nihil quae, vero voluptatem officia voluptas quasi perspiciatis, nostrum corporis ea molestias at ipsum accusantium tempore. Nihil ratione commodi accusamus!"
-          },
-          {
-            title: "Step D",
-            step:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae nihil quae, vero voluptatem officia voluptas quasi perspiciatis, nostrum corporis ea molestias at ipsum accusantium tempore. Nihil ratione commodi accusamus!"
-          },
-          {
-            title: "Step F",
-            step:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam beatae nihil quae, vero voluptatem officia voluptas quasi perspiciatis, nostrum corporis ea molestias at ipsum accusantium tempore. Nihil ratione commodi accusamus!"
-          }
-        ],
-        tags: [
-          "#tag",
-          "#tag",
-          "#tag",
-          "#tag",
-          "#tag",
-          "#tag",
-          "#tag",
-          "#tag",
-          "#tag",
-          "#tag"
-        ]
-      }
-    };
+  computed: {
+    recipe() {
+      return this.$store.state.recipe;
+    }
   },
   methods: {
     backToTop: function() {
@@ -230,6 +160,7 @@ export default {
 .recipeTitle {
   background-image: url(https://source.unsplash.com/900x300/?food-kitchen-cooking);
   background-position: center;
+  background-size: cover;
 }
 .recipeTitle > h2 {
   text-shadow: 0.2rem 0.2rem 0.25rem rgba(44, 44, 44, 0.5);
