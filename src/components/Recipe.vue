@@ -15,7 +15,9 @@
           class="pa-8 yellow lighten-4 shaped sideBar d-flex flex-column"
         >
           <div class="my-2">
-            <v-btn color="warning" block dark>Go Back</v-btn>
+            <v-btn color="warning" block dark @click="$router.go(-1)"
+              >Go Back</v-btn
+            >
           </div>
           <p class="pt-8">
             {{ recipe.description }}
@@ -27,7 +29,7 @@
             <v-list-item>
               <v-list-item-content class="d-flex flex-column">
                 <v-list-item-title class="font-weight-medium align-start"
-                  >Servings</v-list-item-title
+                  >Cubiertos</v-list-item-title
                 >
                 <v-list-item-subtitle class="font-weight-light pl-1 ">
                   {{ recipe.servings }}</v-list-item-subtitle
@@ -57,7 +59,7 @@
             <v-list-item>
               <v-list-item-content class="d-flex flex-column">
                 <v-list-item-title class="font-weight-medium ingridientTitle"
-                  >Hashtags</v-list-item-title
+                  >Etiquetas</v-list-item-title
                 >
                 <v-chip-group column active-class="primary--text">
                   <v-chip

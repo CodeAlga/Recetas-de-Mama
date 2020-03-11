@@ -7,14 +7,14 @@
     width="100vw"
     class="d-flex flex-column justify-space-around"
   >
-    <v-toolbar-title>Title</v-toolbar-title>
+    <v-toolbar-title>Las Recetas de Mamá</v-toolbar-title>
 
     <v-spacer></v-spacer>
 
     <v-text-field
       dense
       clearable
-      label="Search"
+      label="Buscar"
       append-outer-icon="mdi-magnify"
       class="align-self-end searchBox"
     ></v-text-field>

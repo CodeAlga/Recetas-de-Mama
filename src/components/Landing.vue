@@ -68,7 +68,7 @@
         <div></div>
 
         <v-btn color="grey" outlined large>
-          <router-link to="/recipies">
+          <router-link to="/recipes">
             <span class="grey--text text--darken-1 font-weight-bold">
               Start
             </span>
