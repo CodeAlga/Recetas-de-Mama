@@ -1,6 +1,12 @@
 <template>
   <v-flex>
-    <v-form ref="form" v-model="valid" lazy-validation class="ma-9">
+    <v-form
+      ref="form"
+      @submit.prevent="submit"
+      v-model="valid"
+      lazy-validation
+      class="ma-9"
+    >
       <v-text-field
         v-model="name"
         :rules="emptyRules"
@@ -45,14 +51,14 @@
       ></v-textarea>
       <h3 class="headline">Ingredientes</h3>
       <v-row v-for="(ingridient, i) in ingridients" :key="i">
-        <v-col>
+        <v-col class="ml-4 pa-0">
           <p>{{ ingridient.ingridient }}</p>
         </v-col>
-        <v-col>
+        <v-col class="pa-0">
           <p>{{ ingridient.quantity }}</p>
         </v-col>
-        <v-col
-          ><v-btn color="error" fab x-small dark @click="removeIngridient">
+        <v-col class="pa-0"
+          ><v-btn color="error" fab x-small dark @click="removeIngridient(i)">
             <v-icon>mdi-delete</v-icon>
           </v-btn></v-col
         >
@@ -63,7 +69,7 @@
           <v-text-field
             single-line
             ref="ingridient"
-            :rules="ingridientRules"
+            :rules="[!ingridientError || 'Necesita algunos ingredientes']"
             v-model="ingridient"
             label="Ingrediente"
           ></v-text-field>
@@ -83,19 +89,19 @@
             Añadir ingrediente
           </v-btn>
         </v-col>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius maxime
+        corporis libero velit odio eligendi illo vero hic amet culpa.
       </v-row>
       <h3 class="headline">Preparación</h3>
-      <v-row v-for="(step, i) in steps" :key="i">
-        <v-row>
-          <v-col>
-            <p>{{ step.title }}</p>
-          </v-col>
-        </v-row>
-        <v-col sm="9">
+      <v-row v-for="(step, i) in steps" :key="10 + i">
+        <v-col sm="3" class="ml-4 pa-0">
+          <p>{{ step.title }}</p>
+        </v-col>
+        <v-col sm="8" class="pa-0">
           <p>{{ step.step }}</p>
         </v-col>
-        <v-col
-          ><v-btn color="error" fab x-small dark @click="removeStep">
+        <v-col class=" pa-0"
+          ><v-btn color="error" fab x-small dark @click="removeStep(10 + 'i')">
             <v-icon>mdi-delete</v-icon>
           </v-btn></v-col
         >
@@ -116,7 +122,7 @@
           <v-textarea
             single-line
             ref="step"
-            :rules="prepRules"
+            :rules="[!stepError || 'Necesita algunos pasos']"
             v-model="step"
             label="Paso"
             auto-grow
@@ -146,36 +152,47 @@
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>
-                  No hay resultados parecidos "<strong>{{ search }}</strong
-                  >". Presiona <kbd>enter</kbd> para crear uno nuevo
+                  No hay resultados parecidos a "<strong>{{ search }}</strong
+                  >".
                 </v-list-item-title>
+                <v-list-item-subtitle
+                  >Presiona <kbd>enter</kbd> o <kbd>tab</kbd> para crear uno
+                  nuevo</v-list-item-subtitle
+                >
               </v-list-item-content>
             </v-list-item>
           </template>
         </v-combobox>
       </v-row>
+
       <v-btn :disabled="!valid" color="success" class="mr-4" @click="validate">
-        Validate
+        Validar Formulario
       </v-btn>
 
       <v-btn color="error" class="mr-4" @click="reset">
-        Reset Form
+        Limpiar Formulario
       </v-btn>
 
       <v-btn color="warning" @click="resetValidation">
-        Reset Validation
+        Eliminar Errores
       </v-btn>
     </v-form>
   </v-flex>
 </template>
 
 <script>
+import db from "@/firebase/init";
+import slugify from "slugify";
+
 export default {
   name: "NewRecipe",
   data: () => ({
     valid: true,
+    ingridientError: true,
+    stepError: true,
 
     name: "",
+    slug: "",
 
     time: "",
 
@@ -193,6 +210,7 @@ export default {
     step: "",
     steps: [],
 
+    tags: [],
     common: [
       "pollo",
       "ternera",
@@ -204,7 +222,6 @@ export default {
       "aperitivo",
       "postre"
     ],
-    tags: [],
     search: null,
 
     servingItems: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -218,12 +235,6 @@ export default {
         "La descripción tiene que ser un poquito más larga"
     ],
 
-    ingridientRules: [
-      (ingridients) => ingridients.length !== 0 || "Necesita algun ingrediente"
-    ],
-
-    prepRules: [(steps) => steps.length !== 0 || "Necesita algun paso"],
-
     tagRules: [(tags) => tags.length >= 5 || "Necesita algunas etiqueta"]
 
     // email: "",
@@ -231,33 +242,69 @@ export default {
     //   (v) => !!v || "E-mail is required",
     //   (v) => /.+@.+\..+/.test(v) || "E-mail must be valid"
     // ],
-
-    //checkbox: false
   }),
 
   methods: {
     addIngridient() {
       this.ingridients.push({
-        ingridient: this.ingridient,
-        quantity: this.quantity
+        ingridient:
+          this.ingridient.slice(0, 1).toUpperCase() + this.ingridient.slice(1),
+        quantity:
+          this.quantity.slice(0, 1).toUpperCase() + this.quantity.slice(1)
       });
+
       this.$refs.ingridient.reset();
       this.$refs.quantity.reset();
+
+      if (this.ingridientError) this.ingridientError = false;
     },
-    removeIngridient() {},
+    removeIngridient(i) {
+      this.ingridients.splice(i, 1);
+    },
 
     addStep() {
       this.steps.push({
-        title: this.title,
-        step: this.step
+        title: this.title.slice(0, 1).toUpperCase() + this.title.slice(1),
+        step: this.step.slice(0, 1).toUpperCase() + this.step.slice(1)
       });
+
       this.$refs.title.reset();
       this.$refs.step.reset();
+
+      if (this.stepError) this.stepError = false;
     },
-    removeStep() {},
+    removeStep(i) {
+      this.steps.splice(i, 1);
+    },
 
     validate() {
       this.$refs.form.validate();
+      if (this.valid) {
+        this.slug = slugify(this.name, {
+          replacement: "-",
+          remove: /[$*_+~.()'"!\-:@]/g,
+          lower: true
+        });
+        this.tags = this.tags.map((tag) => {
+          return "#" + tag;
+        });
+
+        db.collection("recipes")
+          .add({
+            name: this.name.slice(0, 1).toUpperCase() + this.name.slice(1),
+            slug: this.slug,
+            time: this.time,
+            servings: this.servings,
+            dificulty: this.dificulty,
+            description:
+              this.description.slice(0, 1).toUpperCase() +
+              this.description.slice(1),
+            ingridients: this.ingridients,
+            steps: this.steps,
+            tags: this.tags
+          })
+          .then.$router.push({ name: "Home" });
+      }
     },
     reset() {
       this.$refs.form.reset();

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0">
+  <v-container v-if="recipe" fluid class="pa-0">
     <v-row>
       <v-flex class="recipeTitle">
         <h2
@@ -48,7 +48,8 @@
             </v-list-item>
             <v-list-item>
               <v-list-item-content class="d-flex flex-column">
-                <v-list-item-title class="font-weight-medium ingridientTitle"
+                <v-list-item-title
+                  class="font-weight-medium text-center ingridientTitle"
                   >Tiempo de preparación</v-list-item-title
                 >
                 <v-list-item-subtitle class="font-weight-light pl-1">
@@ -140,13 +141,18 @@
 </template>
 
 <script>
+import db from "@/firebase/init";
+import firebase from "firebase";
+
 export default {
   name: "Recipe",
-  computed: {
-    recipe() {
-      return this.$store.state.recipe;
-    }
+  data() {
+    return {
+      loading: false,
+      recipe: null
+    };
   },
+
   methods: {
     backToTop: function() {
       window.scroll({
@@ -154,6 +160,22 @@ export default {
         behavior: "smooth"
       });
     }
+  },
+
+  created() {
+    let recipeCollection = db
+      .collection("recipes")
+      .where(
+        firebase.firestore.FieldPath.documentId(),
+        "==",
+        this.$route.params.recipe_id
+      );
+    recipeCollection.get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        this.recipe = doc.data();
+        !this.loading;
+      });
+    });
   }
 };
 </script>
