@@ -13,11 +13,11 @@
     <v-row class="ma-0 d-flex">
       <v-col cols="4" class="pa-0">
         <v-sheet
-          class="pa-8 yellow lighten-4 shaped sideBar d-flex flex-column"
+          class="pa-4 yellow lighten-4 shaped sideBar d-flex flex-column"
         >
           <div class="my-2">
             <v-btn color="warning" block dark @click="$router.go(-1)"
-              >Go Back</v-btn
+              >Go Home</v-btn
             >
           </div>
 
@@ -49,25 +49,27 @@
               <v-list-item-content class="d-flex flex-column">
                 <v-list-item-title
                   class="font-weight-medium text-center ingridientTitle"
-                  >Tiempo de preparación</v-list-item-title
+                  >Tipo de receta</v-list-item-title
                 >
                 <v-list-item-subtitle class="font-weight-light pl-1">
-                  Something</v-list-item-subtitle
+                  Postre</v-list-item-subtitle
                 >
               </v-list-item-content>
             </v-list-item>
-            <v-list-item>
+            <v-list-item class="pa-0">
               <v-list-item-content class="d-flex flex-column">
                 <v-list-item-title class="font-weight-medium ingridientTitle"
                   >Etiquetas</v-list-item-title
                 >
-                <v-chip-group column active-class="primary--text">
-                  <v-chip
-                    class="font-weight-light pl-1 d-flex flex-row flex-wrap"
-                  >
-                    Something
-                  </v-chip>
-                </v-chip-group>
+                <div class="d-flex flex-wrap justify-center">
+                  <v-chip-group v-for="(object, i) in getTags" :key="i">
+                    <v-chip
+                      class="font-weight-light pl-1 d-flex flex-row flex-wrap"
+                    >
+                      {{ object }}
+                    </v-chip>
+                  </v-chip-group>
+                </div>
               </v-list-item-content>
             </v-list-item>
           </div>
@@ -93,27 +95,28 @@
                   >
                 </v-list-item-content>
               </v-list-item>
-              <v-btn color="warning" dark large class="readMore">
+              <v-btn color="warning" large dark class="readMore">
                 <router-link
                   :to="{
                     name: 'RecipeView',
                     params: { recipe_slug: recipe.slug, recipe_id: recipe.id }
                   }"
+                  class="white--text"
                 >
                   Ver
                 </router-link>
               </v-btn>
             </v-card>
           </div>
-          <!-- <div class="flex-grow-0">
-        <v-pagination
-          class="align-content-end"
-          v-model="page"
-          :length="15"
-          :total-visible="7"
-          circle
-        ></v-pagination>
-      </div> -->
+          <div class="flex-grow-0 mb-6">
+            <!-- <v-pagination
+              class="align-content-end"
+              v-model="page"
+              :length="15"
+              :total-visible="7"
+              circle
+            ></v-pagination> -->
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -132,13 +135,59 @@ export default {
 
   data() {
     return {
-      page: 1
+      //recipes: [],
+      tagCloud: null,
+      page: 1,
+      tagtest: [
+        "item1",
+        "item2",
+        "item1",
+        "item3",
+        "item4",
+        "item5",
+        "item2",
+        "item2"
+      ],
+      tagresult: null
     };
   },
+
+  methods: {},
 
   computed: {
     recipes() {
       return this.$store.getters.allRecipes;
+    },
+
+    getTags() {
+      let string = [];
+
+      this.recipes.forEach((recipe) => {
+        const filter = recipe.tags.forEach((tag) => {
+          if (!string.includes(tag) && string.length < 20) {
+            string.push(tag);
+          }
+        });
+        return filter;
+      });
+
+      let frequentTag = {};
+      for (var i = 0; i < string.length; i++) {
+        let word = string[i];
+        if (frequentTag[word]) {
+          frequentTag[word]++;
+        } else {
+          frequentTag[word] = 1;
+        }
+      }
+      console.log(frequentTag);
+
+      let orderArray = Object.entries(frequentTag);
+
+      let orderResult = orderArray
+        .sort((a, b) => b[1] - a[1])
+        .map((arr) => arr[0]);
+      return orderResult;
     }
   },
 
@@ -174,11 +223,6 @@ export default {
 .readMore {
   align-self: center;
   margin-right: 1rem;
-}
-a,
-a:visited {
-  text-decoration: none;
-  color: inherit;
 }
 .sideBar {
   min-height: 100%;

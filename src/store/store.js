@@ -6,8 +6,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   strict: true,
   state: {
-    recipe: {},
-    recipes: []
+    //recipe: {},
+    recipes: [],
+    cloudTags: null
   },
   getters: {
     allRecipes: (state) => {
@@ -23,14 +24,14 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    getRecipes: (context) => {
+    getRecipes: ({ commit }) => {
       db.collection("recipes")
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let recipe = doc.data();
             recipe.id = doc.id;
-            context.commit("setRecipes", recipe);
+            commit("setRecipes", recipe);
           });
         })
         .catch((err) => {

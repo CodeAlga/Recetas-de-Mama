@@ -1,5 +1,5 @@
 <template>
-  <v-footer absolute class="font-weight-medium">
+  <v-footer absolute class="font-weight-light">
     <v-col class="text-center pa-0" cols="12">
       {{ new Date().getFullYear() }} —
       <span class="text--disabled">CodeAlga</span>

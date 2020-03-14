@@ -78,11 +78,16 @@
 
       <div class="py-12"></div>
     </section>
+    <Footer />
   </v-content>
 </template>
 
 <script>
+import Footer from "@/components/Footer.vue";
+
 export default {
-  name: "Landing"
+  name: "Landing",
+
+  components: { Footer }
 };
 </script>

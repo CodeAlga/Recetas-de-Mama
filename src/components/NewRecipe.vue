@@ -166,7 +166,7 @@
       </v-row>
 
       <v-btn :disabled="!valid" color="success" class="mr-4" @click="validate">
-        Validar Formulario
+        Enviar receta
       </v-btn>
 
       <v-btn color="error" class="mr-4" @click="reset">
@@ -208,7 +208,7 @@ export default {
 
     title: "",
     step: "",
-    steps: [],
+    prep: [],
 
     tags: [],
     common: [
@@ -263,7 +263,7 @@ export default {
     },
 
     addStep() {
-      this.steps.push({
+      this.prep.push({
         title: this.title.slice(0, 1).toUpperCase() + this.title.slice(1),
         step: this.step.slice(0, 1).toUpperCase() + this.step.slice(1)
       });
@@ -274,7 +274,7 @@ export default {
       if (this.stepError) this.stepError = false;
     },
     removeStep(i) {
-      this.steps.splice(i, 1);
+      this.prep.splice(i, 1);
     },
 
     validate() {
@@ -300,7 +300,7 @@ export default {
               this.description.slice(0, 1).toUpperCase() +
               this.description.slice(1),
             ingridients: this.ingridients,
-            steps: this.steps,
+            prep: this.steps,
             tags: this.tags
           })
           .then.$router.push({ name: "Home" });
