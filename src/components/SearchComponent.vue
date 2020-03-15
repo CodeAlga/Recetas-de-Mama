@@ -60,13 +60,9 @@
 </template>
 
 <script>
-//import SearchFocus from "./SearchFocus";
 export default {
   name: "SearchComponent",
 
-  components: {
-    // SearchFocus
-  },
   data() {
     return {
       recipes: [],

@@ -14,13 +14,13 @@
                 justify="center"
               >
                 <v-col class="white--text text-center" cols="12" tag="h1">
-                  <span class="font-weight-light display-2">
+                  <span class="font-weight-light display-2 homeTitle">
                     Las Recetas de
                   </span>
 
                   <br />
 
-                  <span class="font-weight-black display-4">
+                  <span class="font-weight-black display-4 homeTitle">
                     Mi Mama
                   </span>
                 </v-col>
@@ -91,3 +91,9 @@ export default {
   components: { Footer }
 };
 </script>
+
+<style scoped>
+.homeTitle {
+  text-shadow: 0.2rem 0.2rem 0.25rem rgba(44, 44, 44, 0.5);
+}
+</style>

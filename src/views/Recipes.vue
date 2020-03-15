@@ -62,11 +62,12 @@
                   >Etiquetas</v-list-item-title
                 >
                 <div class="d-flex flex-wrap justify-center">
-                  <v-chip-group v-for="(object, i) in getTags" :key="i">
+                  <v-chip-group v-for="(tag, i) in getTags" :key="i">
                     <v-chip
+                      @click="performSearch(tag)"
                       class="font-weight-light pl-1 d-flex flex-row flex-wrap"
                     >
-                      {{ object }}
+                      {{ tag }}
                     </v-chip>
                   </v-chip-group>
                 </div>
@@ -80,7 +81,7 @@
           <div>
             <v-card
               class="v-card--raised ma-5 recipeCard"
-              v-for="(recipe, i) in recipes"
+              v-for="(recipe, i) in searchResults"
               :key="i"
             >
               <v-list-item three-line>
@@ -135,24 +136,45 @@ export default {
 
   data() {
     return {
-      //recipes: [],
       tagCloud: null,
       page: 1,
-      tagtest: [
-        "item1",
-        "item2",
-        "item1",
-        "item3",
-        "item4",
-        "item5",
-        "item2",
-        "item2"
-      ],
-      tagresult: null
+      searchResults: null,
+
+      options: {
+        shouldSort: true,
+        includeMatches: true,
+        threshold: 0.5,
+        location: 0,
+        distance: 500,
+        maxPatternLength: 2,
+        minMatchCharLength: 1,
+        keys: ["tags"]
+      }
     };
   },
 
-  methods: {},
+  methods: {
+    performSearch(tag) {
+      // return tag
+      //   ? this.$search(tag, this.recipes, this.options).then((results) => {
+      //       return results;
+      //     })
+      //   : this.recipes;
+      console.log(tag);
+
+      if (tag) {
+        this.$search(tag, this.recipes, this.options).then((results) => {
+          let localArray = [];
+          for (let i = 0, len = results.length; i < len; i++) {
+            localArray.push(results[i].item);
+          }
+          this.searchResults = localArray;
+        });
+      } else {
+        this.searchResults = this.recipes;
+      }
+    }
+  },
 
   computed: {
     recipes() {
@@ -180,7 +202,6 @@ export default {
           frequentTag[word] = 1;
         }
       }
-      console.log(frequentTag);
 
       let orderArray = Object.entries(frequentTag);
 
@@ -191,9 +212,10 @@ export default {
     }
   },
 
+  watch: {},
   created() {
     this.$store.dispatch("clearStore");
-    this.$store.dispatch("getRecipes");
+    this.$store.dispatch("getRecipes").then(this.performSearch());
   }
 };
 </script>
