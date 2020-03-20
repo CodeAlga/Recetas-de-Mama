@@ -13,8 +13,14 @@
       @keyup="performSearch"
       @keydown.enter="deepSearch"
     />
-    <div v-if="query">
-      <v-card class="mx-auto searchResults" light max-width="400">
+    <div v-if="query" class="d-flex flex-column ">
+      <v-card
+        class="mx-auto searchResults align-self-end"
+        xs="12"
+        sm="12"
+        light
+        max-width="400"
+      >
         <v-card-title>
           <span class="title font-weight-light"
             >Resultados con <strong>{{ query }}</strong></span

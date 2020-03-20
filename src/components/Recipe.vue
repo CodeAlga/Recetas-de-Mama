@@ -1,6 +1,6 @@
 <template>
   <v-container v-if="recipe" fluid class="pa-0">
-    <v-row>
+    <v-row class="mx-0">
       <v-flex class="recipeTitle">
         <h2
           class="display-3 font-weight-black ma-5 pa-12 blue-grey--text text--lighten-5"
@@ -9,14 +9,14 @@
         </h2>
       </v-flex>
     </v-row>
-    <v-row wrap>
+    <v-row wrap class="mx-0">
       <v-flex xs12 sm4>
         <v-sheet
           class="pa-8 yellow lighten-4 shaped sideBar d-flex flex-column"
         >
           <div class="my-2">
             <v-btn color="warning" block dark @click="$router.go(-1)"
-              >Go Back</v-btn
+              >Retroceder</v-btn
             >
           </div>
           <p class="pt-8">
@@ -54,6 +54,17 @@
                 >
                 <v-list-item-subtitle class="font-weight-light pl-1">
                   {{ recipe.time }}</v-list-item-subtitle
+                >
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content class="d-flex flex-column">
+                <v-list-item-title
+                  class="font-weight-medium text-center ingridientTitle"
+                  >Tipo de plato</v-list-item-title
+                >
+                <v-list-item-subtitle class="font-weight-light pl-1">
+                  {{ recipe.type }}</v-list-item-subtitle
                 >
               </v-list-item-content>
             </v-list-item>
@@ -110,7 +121,7 @@
         </div>
         <v-flex class="mb-5">
           <v-card
-            class="v-card--outlined mt-2"
+            class="v-card--outlined mt-2 mx-4"
             v-for="(step, i) in recipe.prep"
             :key="i"
           >
@@ -128,7 +139,6 @@
             dark
             fav
             bottom
-            right
             color="warning"
             @click="backToTop"
           >

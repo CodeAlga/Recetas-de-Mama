@@ -93,7 +93,7 @@
         corporis libero velit odio eligendi illo vero hic amet culpa.
       </v-row>
       <h3 class="headline">Preparación</h3>
-      <v-row v-for="(step, i) in steps" :key="10 + i">
+      <v-row v-for="(step, i) in prep" :key="10 + i">
         <v-col sm="3" class="ml-4 pa-0">
           <p>{{ step.title }}</p>
         </v-col>
@@ -147,6 +147,7 @@
           small-chips
           hint="Mínimo 5 etiquetas"
           persistent-hint
+          deletable-chips
         >
           <template v-slot:no-data>
             <v-list-item>
@@ -300,7 +301,7 @@ export default {
               this.description.slice(0, 1).toUpperCase() +
               this.description.slice(1),
             ingridients: this.ingridients,
-            prep: this.steps,
+            prep: this.prep,
             tags: this.tags
           })
           .then.$router.push({ name: "Home" });

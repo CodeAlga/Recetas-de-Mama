@@ -7,7 +7,9 @@
     width="100vw"
     class="d-flex flex-column justify-space-around"
   >
-    <v-toolbar-title>Las Recetas de Mamá</v-toolbar-title>
+    <v-toolbar-title class="d-none d-sm-flex"
+      >Las Recetas de Mamá</v-toolbar-title
+    >
 
     <v-spacer></v-spacer>
 
