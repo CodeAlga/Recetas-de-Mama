@@ -7,8 +7,7 @@ export default new Vuex.Store({
   strict: true,
   state: {
     //recipe: {},
-    recipes: [],
-    cloudTags: null
+    recipes: []
   },
   getters: {
     allRecipes: (state) => {
@@ -18,6 +17,9 @@ export default new Vuex.Store({
   mutations: {
     setRecipes: (state, payload) => {
       state.recipes.push(payload);
+      state.recipes.sort((a, b) => {
+        return a.date > b.date ? 1 : a.date < b.date ? -1 : 0;
+      });
     },
     clearRecipes: (state) => {
       state.recipes = [];
@@ -41,6 +43,10 @@ export default new Vuex.Store({
 
     clearStore: (context) => {
       context.commit("clearRecipes");
+    },
+
+    orderStore: (context) => {
+      context.commit("orderRecipes");
     }
   },
   modules: {}

@@ -120,7 +120,7 @@
             <v-card
               transition="slide-y-reverse-transition"
               class="v-card--raised ma-5 d-flex flex-column flex-sm-row recipeCard"
-              v-for="(recipe, i) in searchResults"
+              v-for="(recipe, i) in visibleRecipes"
               :key="i"
             >
               <v-list-item three-line>
@@ -149,13 +149,14 @@
             </v-card>
           </div>
           <div class="flex-grow-0 mb-6">
-            <!-- <v-pagination
+            <v-pagination
               class="align-content-end"
+              v-if="totalPages > 1"
               v-model="page"
-              :length="15"
-              :total-visible="7"
+              :length="totalPages"
+              :total-visible="5"
               circle
-            ></v-pagination> -->
+            ></v-pagination>
           </div>
         </div>
       </v-col>
@@ -177,7 +178,6 @@ export default {
     return {
       recipes: null,
       tagCloud: null,
-      page: 1,
       searchResults: null,
       types: ["Todas", "Aperitivo", "Comida", "Postre"],
       type: "Todas",
@@ -188,6 +188,11 @@ export default {
       timeout: 5000,
       loadingValue: 0,
       interval: {},
+
+      page: 1,
+      pageSize: 5,
+      //totalPages: 0,
+      //visibleRecipes: [],
 
       tagOptions: {
         shouldSort: true,
@@ -223,7 +228,7 @@ export default {
   },
 
   methods: {
-    setRecipes() {
+    init() {
       this.recipes = this.$store.getters.allRecipes;
       this.searchResults = this.recipes;
     },
@@ -246,25 +251,23 @@ export default {
 
       if (this.searchResults.length >= 1) {
         if (this.activeTag && this.type === "Todas") {
-          this.$search(
-            this.activeTag,
-            this.searchResults,
-            this.tagOptions
-          ).then((results) => {
-            for (let i = 0, len = results.length; i < len; i++) {
-              localArray.push(results[i].item);
-            }
-            if (localArray.length === 0) {
-              localArray = this.recipes;
-              this.snackbar = true;
-            }
+          this.$search(this.activeTag, this.recipes, this.tagOptions).then(
+            (results) => {
+              for (let i = 0, len = results.length; i < len; i++) {
+                localArray.push(results[i].item);
+              }
+              if (localArray.length === 0) {
+                localArray = this.recipes;
+                this.snackbar = true;
+              }
 
-            this.searchResults = localArray;
-          });
+              this.searchResults = localArray;
+            }
+          );
           console.log("newTag");
           console.log(localArray);
         } else if (!this.activeTag && this.type !== "Todas") {
-          this.$search(this.type, this.searchResults, this.typeOptions).then(
+          this.$search(this.type, this.recipes, this.typeOptions).then(
             (results) => {
               for (let i = 0, len = results.length; i < len; i++) {
                 localArray.push(results[i].item);
@@ -346,6 +349,30 @@ export default {
         .map((arr) => arr[0]);
 
       return orderResult;
+    },
+
+    visibleRecipes() {
+      let localArray;
+      if (this.page === 1) {
+        localArray = this.searchResults.slice(0, this.pageSize);
+      } else {
+        localArray = this.searchResults.slice(
+          this.pageSize * (this.page - 1),
+          this.pageSize * (this.page - 1) + this.pageSize
+        );
+      }
+
+      return localArray;
+    },
+
+    totalPages() {
+      let len = Object.keys(this.searchResults).length;
+
+      if (len == 0 && this.page > 0) {
+        return Math.ceil(len / this.pageSize) - 1;
+      } else {
+        return Math.ceil(len / this.pageSize);
+      }
     }
   },
 
@@ -369,7 +396,7 @@ export default {
 
   created() {
     this.$store.dispatch("clearStore");
-    this.$store.dispatch("getRecipes").then(this.setRecipes());
+    this.$store.dispatch("getRecipes").then(this.init());
   }
 
   // performSearchWithTag() {

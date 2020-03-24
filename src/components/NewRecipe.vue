@@ -89,8 +89,6 @@
             Añadir ingrediente
           </v-btn>
         </v-col>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius maxime
-        corporis libero velit odio eligendi illo vero hic amet culpa.
       </v-row>
       <h3 class="headline">Preparación</h3>
       <v-row v-for="(step, i) in prep" :key="10 + i">
@@ -302,7 +300,11 @@ export default {
               this.description.slice(1),
             ingridients: this.ingridients,
             prep: this.prep,
-            tags: this.tags
+            tags: this.tags,
+            date:
+              new Date().toLocaleDateString() +
+              " " +
+              new Date().toLocaleTimeString()
           })
           .then.$router.push({ name: "Home" });
       }
