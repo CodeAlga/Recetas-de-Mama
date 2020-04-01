@@ -26,7 +26,7 @@
             >Resultados con <strong>{{ query }}</strong></span
           >
         </v-card-title>
-        <v-card-list v-for="(result, i) in searchResults" :key="i">
+        <v-list-item v-for="(result, i) in searchResults" :key="i">
           <router-link
             :to="{
               name: 'RecipeView',
@@ -53,13 +53,13 @@
           </router-link>
 
           <v-divider />
-        </v-card-list>
-        <v-card-actions class="justify-center">
-          <v-btn color="warning">
+        </v-list-item>
+        <!-- <v-card-actions class="justify-center">
+          <v-btn color="warning" @click="deepSearch">
             Busca mas resultados con "<strong>{{ query }}</strong
             >"
           </v-btn>
-        </v-card-actions>
+        </v-card-actions> -->
       </v-card>
     </div>
   </div>
@@ -89,19 +89,26 @@ export default {
       }
     };
   },
+
   created() {
     this.recipes = this.$store.getters.allRecipes;
   },
+
   methods: {
     reset() {
       this.query = "";
       this.highlightedIndex = 0;
     },
     performSearch() {
+      this.recipes = this.$store.getters.allRecipes;
+
       this.$search(this.query, this.recipes, this.options).then((results) => {
         this.searchResults = results;
       });
-      console.log(this.searchResults);
+    },
+
+    deepSearch() {
+      this.$store.dispatch("deepSearch", this.query);
     }
   }
 };

@@ -56,9 +56,11 @@
           class="mx-auto title font-weight-light mb-8"
           max-width="720"
         >
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi
-          possimus odio est illum maxime ea eveniet, placeat corrupti? Sapiente
-          minus non vitae repellendus numquam nihil alias quia, quis a libero!
+          Este recetario es un testimonio de a la cultura de las comidas de
+          domingo que giran alrededor de una mesa que al final del evente estará
+          llena de platos vacios. Una cultura generacional que espero poder
+          mantener y retransmitir a aquellos que creen que una comida hecha con
+          cariño es el mundo.
         </v-responsive>
 
         <!--  <v-avatar class="elevation-12 mb-12" size="128">
